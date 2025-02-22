@@ -1,0 +1,34 @@
+`timescale 1ns / 1ps
+
+module sbox_tb;
+
+    // Inputs
+    reg [7:0] data;
+
+    // Outputs
+    wire [7:0] dout;
+
+    // Instantiate the sbox module
+    sbox uut (
+        .data(data),
+        .dout(dout)
+    );
+
+    // Test sequence
+    initial begin
+        // Open a file to log the results
+        $dumpfile("sbox_tb.vcd");  // Save waveform data to this file
+        $dumpvars(0, sbox_tb);     // Dump all variables
+
+        // Test all 256 possible input values
+        for (int i = 0; i < 256; i++) begin
+            data = i;  // Set input to current value
+            #10;       // Wait for 10 time units
+            $display("Input: %h, Output: %h", data, dout);
+        end
+
+        // End simulation
+        $finish;
+    end
+
+endmodule
