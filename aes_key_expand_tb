@@ -1,0 +1,64 @@
+
+`timescale 1ns / 1ps
+
+module aes_key_expand_128_tb;
+
+    // Inputs
+    reg clk;
+    reg [127:0] key;
+
+    // Outputs
+    wire [127:0] key_s0, key_s1, key_s2, key_s3, key_s4, key_s5, key_s6, key_s7, key_s8, key_s9, key_s10;
+
+    // Instantiate the key expansion module
+    aes_key_expand_128 uut (
+        .clk(clk),
+        .key(key),
+        .key_s0(key_s0),
+        .key_s1(key_s1),
+        .key_s2(key_s2),
+        .key_s3(key_s3),
+        .key_s4(key_s4),
+        .key_s5(key_s5),
+        .key_s6(key_s6),
+        .key_s7(key_s7),
+        .key_s8(key_s8),
+        .key_s9(key_s9),
+        .key_s10(key_s10)
+    );
+
+    // Clock generation (toggle every 5 time units)
+    always #5 clk = ~clk;
+
+    // Test sequence
+    initial begin
+        // Open a file to log the results
+        $dumpfile("aes_key_expand_128_tb.vcd");  // Save waveform data to this file
+        $dumpvars(0, aes_key_expand_128_tb);     // Dump all variables
+
+        // Initialize inputs
+        clk = 0;
+        key = 128'h000102030405060708090a0b0c0d0e0f; // Example key
+
+        // Wait for the key expansion to complete
+        #100;
+
+        // Display the results
+        $display("Initial Key: %h", key);
+        $display("Round Key 0: %h", key_s0);
+        $display("Round Key 1: %h", key_s1);
+        $display("Round Key 2: %h", key_s2);
+        $display("Round Key 3: %h", key_s3);
+        $display("Round Key 4: %h", key_s4);
+        $display("Round Key 5: %h", key_s5);
+        $display("Round Key 6: %h", key_s6);
+        $display("Round Key 7: %h", key_s7);
+        $display("Round Key 8: %h", key_s8);
+        $display("Round Key 9: %h", key_s9);
+        $display("Round Key 10: %h", key_s10);
+
+        // End simulation
+        $finish;
+    end
+
+endmodule
