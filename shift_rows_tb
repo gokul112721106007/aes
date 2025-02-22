@@ -1,0 +1,50 @@
+`timescale 1ns / 1ps
+
+module shiftrows_tb;
+
+    // Inputs
+    reg clk;
+    reg [127:0] data_in;
+
+    // Outputs
+    wire [127:0] data_out;
+
+    // Instantiate the shiftrows module
+    shiftrows uut (
+        .clk(clk),
+        .data_in(data_in),
+        .data_out(data_out)
+    );
+
+    // Clock generation (toggle every 5 time units)
+    always #5 clk = ~clk;
+
+    // Test sequence
+    initial begin
+        // Open a file to log the results
+        $dumpfile("shiftrows_tb.vcd");  // Save waveform data to this file
+        $dumpvars(0, shiftrows_tb);     // Dump all variables
+
+        // Initialize inputs
+        clk = 0;
+        data_in = 128'h00112233445566778899aabbccddeeff; // Example input
+
+        // Wait for the ShiftRows operation to complete
+        #20;
+
+        // Display the results
+        $display("Data In: %h", data_in);
+        $display("ShiftRows Out: %h", data_out);
+
+        // Verify the output against the expected result
+        if (data_out === 128'h0011556688224477cc99eeffbbdd33aa) begin
+            $display("Test Passed: ShiftRows Out is correct!");
+        end else begin
+            $display("Test Failed: ShiftRows Out is incorrect!");
+        end
+
+        // End simulation
+        $finish;
+    end
+
+endmodule
